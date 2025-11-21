@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "288379189288",
+    "project_id": "reto-lectura",
+    "storage_bucket": "reto-lectura.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:288379189288:android:11e0754e6765e6821a5d1d",
+        "android_client_info": {
+          "package_name": "com.example.retolectura"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "288379189288-65n76ll73vitgn8blen2dhid25ai5dvr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.retolectura",
+            "certificate_hash": "7c5640667980f393dc1a6fcd2b1042e3fb2abb14"
+          }
+        },
+        {
+          "client_id": "288379189288-8pl5dgn1so4u9ne9nvrhu49nctippue6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtwY3q8o3uTdzRAv6x276yZQjVFwfnboE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "288379189288-8pl5dgn1so4u9ne9nvrhu49nctippue6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "288379189288-oubfhup5kk6l552386nf75oisan9a7r3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.retolectura"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

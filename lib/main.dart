@@ -1,6 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:retolectura/src/provider/data_provider.dart';
+import 'package:retolectura/src/services/google-signIn.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  //await FirebaseAuth.instance.useAuthEmulator('10.60.7.26', 9099);
+
   runApp(const MyApp());
 }
 
@@ -63,7 +73,18 @@ class _MyHomePageState extends State<MyHomePage> {
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
+
+      if (_counter == 0) {
+        final user = GoogleSigin.handleGoogleSignIn();
+      }
+      print(FirebaseAuth.instance.currentUser);
+
       _counter++;
+
+      final d = LibroDataProvider();
+
+      final fmap = d.getAllLibroData('libros_data');
+      print(fmap);
     });
   }
 
