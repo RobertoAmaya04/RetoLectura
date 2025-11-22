@@ -1,12 +1,12 @@
 class LibroData {
-  final String id;
+  final int id;
   final String autor;
   final String titulo;
   final String estado;
   final String? portada;
-  final int? pagLeidas;
-  final int? pagTotales;
-  final int? tiempoTotal;
+  final int pagLeidas;
+  final int pagTotales;
+  final int tiempoTotal;
 
   LibroData({
     required this.id,
@@ -26,7 +26,7 @@ class LibroData {
     estado: libroData['estado'],
     portada: libroData['img_portada'],
     pagLeidas: libroData['pag_leidas'],
-    pagTotales: libroData['pag_Totales'],
+    pagTotales: libroData['pag_totales'],
     tiempoTotal: libroData['tiempo_total'],
   );
 
@@ -36,10 +36,10 @@ class LibroData {
       'autor': autor,
       'titulo': titulo,
       'estado': estado,
-      'portada': portada,
-      'pagLeidas': pagLeidas,
-      'pagTotales': pagTotales,
-      'tiempoTotal': tiempoTotal,
+      'img_portada': portada,
+      'pag_leidas': pagLeidas,
+      'pag_totales': pagTotales,
+      'tiempo_total': tiempoTotal,
     };
   }
 }

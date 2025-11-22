@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 
 class LibroDataProvider {
-  Future<List<LibroData>> getAllLibroData(String collectionID) async {
+  Future<List<LibroData>> getAllLibroData() async {
     final db = FirebaseFirestore.instance;
-    final collectionRefTodos = db.collection(collectionID);
+    final collectionRefTodos = db.collection('users');
 
     final snapshotTodos = await collectionRefTodos.get();
 
@@ -18,9 +18,12 @@ class LibroDataProvider {
     return libroData;
   }
 
-  Stream<List<LibroData>> getAllLibroDataStram() {
+  Stream<List<LibroData>> getAllLibroDataStream() {
     final db = FirebaseFirestore.instance;
-    final collectionRefLibData = db.collection('libros_data');
+    final collectionRefLibData = db
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('books');
 
     final snapshotLibs = collectionRefLibData.snapshots();
 
@@ -30,16 +33,27 @@ class LibroDataProvider {
       }).toList();
     });
 
-    Future<void> saveData(Map<String, dynamic> libroData) async {
-      final db = FirebaseFirestore.instance;
-
-      final collectionRefLibData = db.collection(
-        FirebaseAuth.instance.currentUser!.uid,
-      );
-
-      await collectionRefLibData.add(libroData);
-    }
-
     return lib;
+  }
+
+  Future<void> saveData(Map<String, dynamic> libroData, String docID) async {
+    final db = FirebaseFirestore.instance;
+
+    final collectionRefLibData = db
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('books');
+
+    await collectionRefLibData.doc('docID').set(libroData);
+  }
+
+  Future<void> updateData(Map<String, dynamic> libroData, String docID) async {
+    final db = FirebaseFirestore.instance;
+
+    final collectionRefLibData = db
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('books');
+    await collectionRefLibData.doc(docID).update(libroData);
   }
 }
