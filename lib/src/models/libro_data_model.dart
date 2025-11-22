@@ -24,10 +24,10 @@ class LibroData {
     autor: libroData['autor'],
     titulo: libroData['titulo'],
     estado: libroData['estado'],
-    portada: libroData['img_portada'],
-    pagLeidas: libroData['pag_leidas'],
-    pagTotales: libroData['pag_Totales'],
-    tiempoTotal: libroData['tiempo_total'],
+    portada: libroData['portada'],
+    pagLeidas: libroData['pagLeidas'],
+    pagTotales: libroData['PagTotales'],
+    tiempoTotal: libroData['tiempoTotal'],
   );
 
   Map<String, dynamic> toJson() {
