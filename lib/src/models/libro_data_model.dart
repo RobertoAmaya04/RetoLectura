@@ -6,7 +6,7 @@ class LibroData {
   final String? portada;
   final int? pagLeidas;
   final int? pagTotales;
-  final double? tiempoTotal;
+  final int? tiempoTotal;
 
   LibroData({
     required this.id,
@@ -24,10 +24,10 @@ class LibroData {
     autor: libroData['autor'],
     titulo: libroData['titulo'],
     estado: libroData['estado'],
-    portada: libroData['portada'],
-    pagLeidas: libroData['pagLeidas'],
-    pagTotales: libroData['PagTotales'],
-    tiempoTotal: libroData['tiempoTotal'],
+    portada: libroData['img_portada'],
+    pagLeidas: libroData['pag_leidas'],
+    pagTotales: libroData['pag_Totales'],
+    tiempoTotal: libroData['tiempo_total'],
   );
 
   Map<String, dynamic> toJson() {

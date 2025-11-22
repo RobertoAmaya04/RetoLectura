@@ -1,16 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:retolectura/src/models/libro_data_model.dart';
 import 'package:retolectura/src/provider/data_provider.dart';
 import 'package:retolectura/src/services/google-signIn.dart';
+import 'package:retolectura/src/views/libro_estadisticas.dart';
+import 'package:retolectura/src/views/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-  //await FirebaseAuth.instance.useAuthEmulator('10.60.7.26', 9099);
-
   runApp(const MyApp());
 }
 
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final data = LibroDataProvider();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -40,7 +42,34 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: /*LoginPage(),*/ LibroEstadisticasPage(),
+      // Scaffold(
+      //   appBar: AppBar(title: Text('Pruebas')),
+      //   body: StreamBuilder(
+      //     stream: data.getAllLibroDataStram(),
+      //     builder: (context, snapshot) {
+      //       if (snapshot.connectionState == ConnectionState.waiting) {
+      //         return Center(child: CircularProgressIndicator());
+      //       }
+
+      //       if (snapshot.hasError) {
+      //         return Center(child: Text(snapshot.error.toString()));
+      //       }
+
+      //       final List<LibroData> libroData = snapshot.data!;
+
+      //       return ListView.builder(
+      //         itemCount: libroData.length,
+      //         itemBuilder: (BuildContext context, int index) {
+      //           return ListTile(
+      //             leading: CircleAvatar(child: Text('RA')),
+      //             title: Text(libroData[index].autor),
+      //           );
+      //         },
+      //       );
+      //     },
+      //   ),
+      // ),
     );
   }
 }
@@ -74,17 +103,18 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
 
-      if (_counter == 0) {
-        final user = GoogleSigin.handleGoogleSignIn();
-      }
-      print(FirebaseAuth.instance.currentUser);
+      // Pruebas de integración con firebase
+      //     if (_counter == 0) {
+      //       final user = GoogleSigin.handleGoogleSignIn();
+      //     }
+      // print(FirebaseAuth.instance.currentUser!);
+
+      // final d = LibroDataProvider();
+
+      // final fmap = d.getAllLibroData('libros_data');
+      // print(fmap);
 
       _counter++;
-
-      final d = LibroDataProvider();
-
-      final fmap = d.getAllLibroData('libros_data');
-      print(fmap);
     });
   }
 

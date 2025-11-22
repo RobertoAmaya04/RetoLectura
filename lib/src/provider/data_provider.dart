@@ -20,20 +20,26 @@ class LibroDataProvider {
 
   Stream<List<LibroData>> getAllLibroDataStram() {
     final db = FirebaseFirestore.instance;
-    final collectionRefTodos = db
-        .collection('todos')
-        .where('user', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .where('completed', isEqualTo: false)
-        .limit(10);
+    final collectionRefLibData = db.collection('libros_data');
 
-    final snapshotTodos = collectionRefTodos.snapshots();
+    final snapshotLibs = collectionRefLibData.snapshots();
 
-    final todos = snapshotTodos.map((snapshot) {
-      return snapshot.docs.map((todo) {
-        return LibroData.fromJson({...todo.data()});
+    final lib = snapshotLibs.map((snapshot) {
+      return snapshot.docs.map((lib) {
+        return LibroData.fromJson({...lib.data()});
       }).toList();
     });
 
-    return todos;
+    Future<void> saveData(Map<String, dynamic> libroData) async {
+      final db = FirebaseFirestore.instance;
+
+      final collectionRefLibData = db.collection(
+        FirebaseAuth.instance.currentUser!.uid,
+      );
+
+      await collectionRefLibData.add(libroData);
+    }
+
+    return lib;
   }
 }
