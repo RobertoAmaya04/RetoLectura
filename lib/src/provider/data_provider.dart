@@ -25,11 +25,11 @@ class LibroDataProvider {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('books');
 
-    final snapshotLibs = collectionRefLibData.snapshots();
+    final snapshotTodos = collectionRefLibData.snapshots();
 
-    final lib = snapshotLibs.map((snapshot) {
-      return snapshot.docs.map((lib) {
-        return LibroData.fromJson({...lib.data()});
+    final lib = snapshotTodos.map((snapshot) {
+      return snapshot.docs.map((libData) {
+        return LibroData.fromJson({...libData.data()});
       }).toList();
     });
 
