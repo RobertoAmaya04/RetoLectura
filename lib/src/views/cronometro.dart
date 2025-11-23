@@ -211,7 +211,7 @@ class _CronometroScreenState extends State<CronometroScreen> {
     }
 
     return [
-      ElevatedButton(
+      ElevatedButton( 
         onPressed: _isPaused ? _resumeTimer : _pauseTimer,
         child: Text(_isPaused ? 'Continuar' : 'Pausar'),
         style: _buttonStyle(color: _isPaused ? Colors.green : null),
@@ -225,7 +225,7 @@ class _CronometroScreenState extends State<CronometroScreen> {
     ];
   }
 
-  ButtonStyle _buttonStyle({Color? color}) {
+  ButtonStyle _buttonStyle({Color? color}) { 
     return ElevatedButton.styleFrom(
       foregroundColor: color ?? const Color(0xFF6A1B9A),
       backgroundColor: Colors.white,
