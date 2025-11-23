@@ -83,7 +83,7 @@ class GlobalMetricsPage extends StatelessWidget {
                       icon: Icons.menu_book,
                       title: 'Progreso Total de Páginas',
                       value: '$totalPagesRead / $totalPages',
-                      color: const Color(0xFF9C27B0),
+                      color: const Color(0xFFE040FB),
                     ),
                   ),
                 ],
@@ -108,52 +108,55 @@ class GlobalMetricsPage extends StatelessWidget {
                     return Card(
                       color: Colors.white.withValues(alpha: 0.2),
                       margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                      clipBehavior: Clip.antiAlias, // Importante para que el border radius funcione
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Container(
-                        width: 120, // Adjust card width as needed
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (book.portada != null)
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  book.portada!,
-                                  height: 80,
-                                  width: 60,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Icon(
-                                        Icons.book,
-                                        size: 60,
+                      child: SizedBox(
+                        width: 120,
+                        height: 180, // Define una altura fija para el card
+                        child: book.portada != null
+                            ? Image.network(
+                                book.portada!,
+                                fit: BoxFit.cover, // Cubre todo el espacio
+                                width: double.infinity,
+                                height: double.infinity,
+                                errorBuilder: (context, error, stackTrace) => Container(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.book,
+                                      size: 80,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ),
+                                loadingBuilder: (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return Container(
+                                    color: Colors.white.withValues(alpha: 0.1),
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress.expectedTotalBytes != null
+                                            ? loadingProgress.cumulativeBytesLoaded /
+                                                loadingProgress.expectedTotalBytes!
+                                            : null,
                                         color: Colors.white70,
                                       ),
-                                ),
+                                    ),
+                                  );
+                                },
                               )
-                            else
-                              const Icon(
-                                Icons.book,
-                                size: 60,
-                                color: Colors.white70,
+                            : Container(
+                                color: Colors.white.withValues(alpha: 0.1),
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.book,
+                                    size: 80,
+                                    color: Colors.white70,
+                                  ),
+                                ),
                               ),
-                            const SizedBox(height: 8),
-                            Text(
-                              book.titulo,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
                       ),
                     );
                   },

@@ -30,7 +30,7 @@ class _MainPageState extends State<MainPage> {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: CircleAvatar(
-            backgroundColor: Colors.white.withOpacity(0.2),
+            backgroundColor: Colors.white.withValues(alpha: 0.2),
             child: ClipOval(
               child: FirebaseAuth.instance.currentUser?.photoURL != null
                   ? Image.network(FirebaseAuth.instance.currentUser!.photoURL!, fit: BoxFit.cover)
@@ -97,8 +97,7 @@ class _MainPageState extends State<MainPage> {
                 final libro = libroData[index];
                 return GestureDetector(
                   onTap: () {
-                    // Navegación sin implementar lógica, como se solicitó
-                    print("Tapped on ${libro.titulo}");
+                    context.goNamed('book', extra: libro);
                   },
                   child: Card(
                     clipBehavior: Clip.antiAlias,
@@ -106,18 +105,11 @@ class _MainPageState extends State<MainPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Ink.image(
+                    child: Image(
                       image: NetworkImage(
                         libro.portada ?? 'https://images.icon-icons.com/317/PNG/512/book-bookmark-icon_34486.png',
                       ),
                       fit: BoxFit.cover,
-                      child: InkWell(
-                        onTap: () {
-                          // Lógica al presionar la tarjeta
-                          print("Tapped on ${libro.titulo}");
-                           context.go('/libro-estadisticas', extra: libro);
-                        },
-                      ),
                     ),
                   ),
                 );
@@ -126,13 +118,13 @@ class _MainPageState extends State<MainPage> {
           },
         ),
       ),
-       floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
-           context.go('/add-book');
+          context.goNamed('create_book');
         },
         backgroundColor: Colors.white,
-        child: const Icon(Icons.add, color: Color(0xFF6A1B9A)),
-      ),
+        child: const Icon(Icons.add, color: Colors.black),
+      )
     );
   }
 }

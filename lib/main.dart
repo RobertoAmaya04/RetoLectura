@@ -33,7 +33,7 @@ class RetoLectura extends StatelessWidget {
       title: 'Reto Lectura',
       debugShowCheckedModeBanner: false,
       routerConfig: GoRouter(
-        initialLocation: '/book',
+        initialLocation: '/home',
         routes: [
           GoRoute(
             path: '/login',
@@ -61,40 +61,43 @@ class RetoLectura extends StatelessWidget {
                 path: '/managebook',
                 name: 'create_book',
                 builder: (context, state) {
-                  //final book = state.extra as LibroData?;
-                  final book = librosTest[0];
+                  final book = state.extra as LibroData?;
+                  
                   return ManageBookPage(book: book);
                 },
+              ),
+
+              GoRoute(
+                path: '/book',
+                name: 'book',
+                builder: (context, state) {
+                  final book = state.extra as LibroData;
+                  return LibroEstadisticasPage(libroData: book);
+                },
+
+                routes: [
+                  GoRoute(
+                    path: '/managebook',
+                    name: 'edit_book',
+                    builder: (context, state) {
+                      final book = state.extra as LibroData?;
+                      return ManageBookPage(book: book);
+                    },
+                  ),
+                  GoRoute(
+                    path: '/cronometro',
+                    name: 'cronometro',
+                    builder: (context, state) {
+                      final book = state.extra as LibroData;
+                      return CronometroScreen(libro: book);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
 
-          GoRoute(
-
-            path: '/book',
-            name: 'book',
-            builder: (context, state) {
-              final book = librosTest[0];
-              return LibroEstadisticasPage(libroData: book);
-            },
-
-            routes: [
-              GoRoute(
-                path: '/managebook',
-                name: 'edit_book',
-                builder: (context, state) {
-                  final book = librosTest[0];
-                  return ManageBookPage(book: book);
-                },
-              ),
-              GoRoute(
-                path: '/cronometro',
-                name: 'cronometro',
-                builder: (context, state) => CronometroScreen()
-                  
-              ),
-            ]
-          ),
+          
         ],
       ),
     );

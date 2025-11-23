@@ -1,77 +1,230 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:retolectura/src/models/libro_data_model.dart';
 
-class CronometroScreen extends StatefulWidget { //Declaración de la pantalla del cronómetro
+class CronometroScreen extends StatefulWidget {
+  final LibroData libro;
+
+  const CronometroScreen({super.key, required this.libro});
   @override
   _CronometroScreenState createState() => _CronometroScreenState();
 }
 
-class _CronometroScreenState extends State<CronometroScreen> { //Estado del cronómetro
-  Timer? _timer; //Objeto que realiza el conteo del tiempo
-  int _seconds = 0; //Contador de segundos
-  bool _isRunning = false; //Estado del cronómetro (en ejecución o pausado) para evitar que se realice múltiples timers
+class _CronometroScreenState extends State<CronometroScreen> {
+  Timer? _timer;
+  int _seconds = 0;
+  bool _isRunning = false;
+  bool _isPaused = false;
+  bool _hasSaved = false; 
 
-  void _startTimer() { //Función para iniciar el cronómetro
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
     if (_isRunning) return;
     _isRunning = true;
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) { //El timer.periodic ejecuta una función cada cierto tiempo
+    _isPaused = false;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _seconds++;
       });
     });
   }
 
-  void _pauseTimer() { //Función para pausar el cronómetro
-    _timer?.cancel();
-    _isRunning = false;
+  void _pauseTimer() {
+    if (_isRunning && !_isPaused) {
+      _timer?.cancel();
+      _isPaused = true;
+      setState(() {});
+    }
   }
 
-  void _resetTimer() { //Función para reiniciar el cronómetro
+  void _resumeTimer() {
+    // Re-instanciamos el timer para continuar.
+    if (_isRunning && _isPaused) {
+      _isPaused = false;
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        setState(() {
+          _seconds++;
+        });
+      });
+      setState(() {});
+    }
+  }
+
+  void _resetTimer() {
     _timer?.cancel();
     setState(() {
       _seconds = 0;
       _isRunning = false;
+      _isPaused = false;
+      _hasSaved = false; 
     });
   }
 
-  String _formatTime(int seconds) { //Función para formatear el tiempo en minutos y segundos
+  String _formatTime(int seconds) {
     final minutes = (seconds ~/ 60).toString().padLeft(2, '0');
     final secs = (seconds % 60).toString().padLeft(2, '0');
     return "$minutes:$secs";
   }
 
-  @override
-  Widget build(BuildContext context) { //Construcción de la interfaz de usuario
-    return Scaffold(
-      appBar: AppBar(title: Text('Cronómetro de lectura')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              _formatTime(_seconds),
-              style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+  Future<bool> _showExitConfirmationDialog() async {
+    if (_seconds == 0 || _hasSaved) {
+      return true;
+    }
+    
+    _pauseTimer();
+    final pageController = TextEditingController();
+    
+    return (await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            title: const Text('Guardar Progreso'),
+            content: TextField(
+              controller: pageController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: '¿En qué página quedaste?',
+              ),
             ),
-            SizedBox(height: 20),
-            Row(
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  _resumeTimer();
+                  context.pop(false);
+                },
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () {
+                  final newPage = int.tryParse(pageController.text) ?? widget.libro.pagLeidas;
+                  final updatedLibro = LibroData(
+                    id: widget.libro.id,
+                    titulo: widget.libro.titulo,
+                    autor: widget.libro.autor,
+                    estado: 'en progreso',
+                    portada: widget.libro.portada,
+                    pagTotales: widget.libro.pagTotales,
+                    pagLeidas: newPage,
+                    tiempoTotal: widget.libro.tiempoTotal + _seconds,
+                  );
+                  
+                  // Aquí deberías tener una función para actualizar el libro en tu DataProvider
+                  // provider.updateBook(updatedLibro);
+
+                  setState(() {
+                    _hasSaved = true;
+                  });
+
+                  context.pop(true);
+                },
+                child: const Text('Guardar'),
+              ),
+            ],
+          ),
+        )) ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        final canPop = await _showExitConfirmationDialog();
+        if (canPop) {
+          context.pop();
+        }
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Cronómetro de lectura'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF6A1B9A),
+                Color(0xFF9C27B0),
+                Color(0xFFE040FB),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Center(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(onPressed: _startTimer, child: Text('Iniciar')),
-                SizedBox(width: 10),
-                ElevatedButton(onPressed: _pauseTimer, child: Text('Pausar')),
-                SizedBox(width: 10),
-                ElevatedButton(onPressed: _resetTimer, child: Text('Reiniciar')),
+                Text(
+                  _formatTime(_seconds),
+                  style: const TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: _buildButtons(),
+                )
               ],
-            )
-          ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  @override
-  void dispose() { //Limpieza del timer al cerrar la pantalla
-    _timer?.cancel();
-    super.dispose();
+  List<Widget> _buildButtons() {
+    if (!_isRunning) {
+      return [
+        ElevatedButton(
+          onPressed: _startTimer,
+          child: const Text('Iniciar'),
+          style: _buttonStyle(),
+        ),
+      ];
+    }
+
+    if (_hasSaved) {
+       return [
+        ElevatedButton(
+          onPressed: _resetTimer,
+          child: const Text('Reiniciar'),
+          style: _buttonStyle(color: Colors.orange),
+        ),
+      ];
+    }
+
+    return [
+      ElevatedButton(
+        onPressed: _isPaused ? _resumeTimer : _pauseTimer,
+        child: Text(_isPaused ? 'Continuar' : 'Pausar'),
+        style: _buttonStyle(color: _isPaused ? Colors.green : null),
+      ),
+      const SizedBox(width: 10),
+      ElevatedButton(
+        onPressed: _showExitConfirmationDialog,
+        child: const Text('Finalizar'),
+        style: _buttonStyle(),
+      ),
+    ];
+  }
+
+  ButtonStyle _buttonStyle({Color? color}) {
+    return ElevatedButton.styleFrom(
+      foregroundColor: color ?? const Color(0xFF6A1B9A),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
   }
 }

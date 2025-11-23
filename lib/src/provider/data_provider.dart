@@ -1,39 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:retolectura/src/models/fakeData.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 
 class LibroDataProvider {
   Future<List<LibroData>> getAllLibroData() async {
-    final db = FirebaseFirestore.instance;
-    final collectionRefTodos = db.collection('users');
+    // final db = FirebaseFirestore.instance;
+    // final collectionRefTodos = db.collection('users');
 
-    final snapshotTodos = await collectionRefTodos.get();
+    // final snapshotTodos = await collectionRefTodos.get();
 
-    final libroData = List<LibroData>.from(
-      snapshotTodos.docs.map((libroData) {
-        return LibroData.fromJson({...libroData.data()});
-      }),
-    );
+    // final libroData = List<LibroData>.from(
+    //   snapshotTodos.docs.map((libroData) {
+    //     return LibroData.fromJson({...libroData.data()});
+    //   }),
+    // );
 
-    return libroData;
+    // return libroData;
+    return librosTest;
   }
 
   Stream<List<LibroData>> getAllLibroDataStream() {
-    final db = FirebaseFirestore.instance;
-    final collectionRefLibData = db
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('books');
+    // final db = FirebaseFirestore.instance;
+    // final collectionRefLibData = db
+    //     .collection('users')
+    //     .doc(FirebaseAuth.instance.currentUser!.uid)
+    //     .collection('books');
 
-    final snapshotTodos = collectionRefLibData.snapshots();
+    // final snapshotTodos = collectionRefLibData.snapshots();
 
-    final lib = snapshotTodos.map((snapshot) {
-      return snapshot.docs.map((libData) {
-        return LibroData.fromJson({...libData.data()});
-      }).toList();
-    });
+    // final lib = snapshotTodos.map((snapshot) {
+    //   return snapshot.docs.map((libData) {
+    //     return LibroData.fromJson({...libData.data()});
+    //   }).toList();
+    // });
 
-    return lib;
+    // return lib;
+
+    return Stream.value(librosTest);
   }
 
   Future<void> saveData(Map<String, dynamic> libroData, String docID) async {
