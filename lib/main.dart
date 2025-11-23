@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:retolectura/src/models/fakeData.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 import 'package:retolectura/src/views/global_metrics_page.dart';
-import 'package:retolectura/src/pages/home_page.dart';
+//import 'package:retolectura/src/view/home_page.dart';
 import 'package:retolectura/src/views/login_page.dart';
 import 'package:retolectura/src/views/manage_book_page.dart';
 import 'package:retolectura/src/provider/data_provider.dart';
