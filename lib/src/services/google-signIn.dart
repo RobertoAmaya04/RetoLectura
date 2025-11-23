@@ -18,4 +18,8 @@ class GoogleSigin {
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
+
+  static void googleSignOut() {
+    GoogleSignIn.instance.signOut();
+  }
 }

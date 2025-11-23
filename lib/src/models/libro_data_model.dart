@@ -1,5 +1,5 @@
 class LibroData {
-  final int id;
+  final int? id;
   final String autor;
   final String titulo;
   final String estado;
@@ -9,14 +9,15 @@ class LibroData {
   final int tiempoTotal;
 
   LibroData({
-    required this.id,
-    this.autor = "anonimo",
+    this.id,
+    required this.autor,
     required this.titulo,
-    required this.estado,
-    this.portada,
+    this.portada =
+        "https://images.icon-icons.com/317/PNG/512/book-bookmark-icon_34486.png",
     required this.pagTotales,
-    this.pagLeidas = 0,
-    this.tiempoTotal = 0,
+    required this.pagLeidas,
+    required this.tiempoTotal,
+    required this.estado,
   });
 
   factory LibroData.fromJson(Map<String, dynamic> libroData) => LibroData(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
+import 'package:retolectura/src/provider/data_provider.dart';
 
 class ManageBookPage extends StatelessWidget {
+  final LibroDataProvider dp = LibroDataProvider();
   final LibroData? book;
   ManageBookPage({super.key, this.book});
 
@@ -15,7 +17,7 @@ class ManageBookPage extends StatelessWidget {
     if (book != null) {
       titleController.text = book!.titulo;
       authorController.text = book!.autor;
-      imageController.text = book!.portada ?? '';
+      imageController.text = book!.portada ?? "";
       totalPageController.text = book!.pagTotales.toString();
     }
 
@@ -120,7 +122,10 @@ class ManageBookPage extends StatelessWidget {
                   decoration: InputDecoration(
                     labelText: 'Número de Páginas',
                     labelStyle: const TextStyle(color: Colors.white70),
-                    prefixIcon: const Icon(Icons.format_list_numbered, color: Colors.white70),
+                    prefixIcon: const Icon(
+                      Icons.format_list_numbered,
+                      color: Colors.white70,
+                    ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: const BorderSide(color: Colors.white54),
@@ -140,6 +145,27 @@ class ManageBookPage extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       // TODO: Implement save functionality
+                      // TODO: Implement controller validation
+                      if (book == null) {
+                        dp.saveData({
+                          'autor': authorController.text,
+                          'titulo': titleController.text,
+                          'img_portada': imageController.text,
+                          'pag_totales': int.parse(totalPageController.text),
+                          'estado': "pediente",
+                          'pag_leidas': 0,
+                          'tiempo_total': 0,
+                        });
+                        return;
+                      }
+
+                      dp.updateData({
+                        'autor': authorController.text,
+                        'titulo': titleController.text,
+                        'img_portada': imageController.text,
+                        'pag_totales': int.parse(totalPageController.text),
+                        'id': book!.id,
+                      });
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

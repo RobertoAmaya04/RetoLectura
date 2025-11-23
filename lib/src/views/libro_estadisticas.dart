@@ -183,7 +183,7 @@ class LibroEstadisticasPage extends StatelessWidget {
           height: 50,
           child: ElevatedButton(
             onPressed: () {
-              context.goNamed('cronometro');
+              context.goNamed('cronometro', extra: libroData);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,

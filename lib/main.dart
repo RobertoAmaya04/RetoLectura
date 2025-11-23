@@ -17,13 +17,7 @@ import 'package:retolectura/src/views/main_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-<<<<<<< HEAD
   await Firebase.initializeApp();
-=======
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  //await FirebaseAuth.instance.useAuthEmulator('10.60.7.26', 9099);
->>>>>>> c87a177ef97ec59201f5f3b724e30d2e8234ad24
 
   runApp(const RetoLectura());
 }
@@ -37,19 +31,7 @@ class RetoLectura extends StatelessWidget {
       title: 'Reto Lectura',
       debugShowCheckedModeBanner: false,
       routerConfig: GoRouter(
-<<<<<<< HEAD
-        initialLocation: '/libstats',
-        redirect: (context, state) {
-          final user = FirebaseAuth.instance.currentUser;
-          if (user == null) {
-            return '/login';
-          }
-
-          return null;
-        },
-=======
-        initialLocation: '/book',
->>>>>>> c87a177ef97ec59201f5f3b724e30d2e8234ad24
+        initialLocation: '/home',
         routes: [
           GoRoute(
             path: '/login',
@@ -77,45 +59,40 @@ class RetoLectura extends StatelessWidget {
                 path: '/managebook',
                 name: 'create_book',
                 builder: (context, state) {
-                  //final book = state.extra as LibroData?;
-                  final book = librosTest[0];
+                  final book = state.extra as LibroData?;
+
                   return ManageBookPage(book: book);
                 },
+              ),
+
+              GoRoute(
+                path: '/book',
+                name: 'book',
+                builder: (context, state) {
+                  final book = state.extra as LibroData;
+                  return LibroEstadisticasPage(libroData: book);
+                },
+
+                routes: [
+                  GoRoute(
+                    path: '/managebook',
+                    name: 'edit_book',
+                    builder: (context, state) {
+                      final book = state.extra as LibroData?;
+                      return ManageBookPage(book: book);
+                    },
+                  ),
+                  GoRoute(
+                    path: '/cronometro',
+                    name: 'cronometro',
+                    builder: (context, state) {
+                      final book = state.extra as LibroData;
+                      return CronometroScreen(libro: book);
+                    },
+                  ),
+                ],
               ),
             ],
-          ),
-
-          GoRoute(
-
-            path: '/book',
-            name: 'book',
-            builder: (context, state) {
-              final book = librosTest[0];
-              return LibroEstadisticasPage(libroData: book);
-            },
-
-            routes: [
-              GoRoute(
-                path: '/managebook',
-                name: 'edit_book',
-                builder: (context, state) {
-                  final book = librosTest[0];
-                  return ManageBookPage(book: book);
-                },
-              ),
-              GoRoute(
-                path: '/cronometro',
-                name: 'cronometro',
-                builder: (context, state) => CronometroScreen()
-                  
-              ),
-            ]
-          ),
-
-          GoRoute(
-            path: '/libstats',
-            name: 'libstats',
-            builder: (context, state) => LibroEstadisticasPage(),
           ),
         ],
       ),

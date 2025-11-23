@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:retolectura/src/models/fakeData.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 
 class LibroDataProvider {
@@ -16,6 +17,7 @@ class LibroDataProvider {
     );
 
     return libroData;
+    //return librosTest;
   }
 
   Stream<List<LibroData>> getAllLibroDataStream() {
@@ -34,26 +36,72 @@ class LibroDataProvider {
     });
 
     return lib;
+
+    //return Stream.value(librosTest);
   }
 
-  Future<void> saveData(Map<String, dynamic> libroData, String docID) async {
+  Future<void> saveData(Map<String, dynamic> libroData) async {
     final db = FirebaseFirestore.instance;
+    final idDisponible = await getPrimerIdDisponible();
+    if (idDisponible == null) {
+      return;
+    }
+    libroData['id'] = idDisponible;
 
     final collectionRefLibData = db
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('books');
 
-    await collectionRefLibData.doc('docID').set(libroData);
+    await collectionRefLibData.doc(idDisponible.toString()).set(libroData);
   }
 
-  Future<void> updateData(Map<String, dynamic> libroData, String docID) async {
+  Future<void> updateData(Map<String, dynamic> libroData) async {
     final db = FirebaseFirestore.instance;
+
+    final id = libroData['id'];
 
     final collectionRefLibData = db
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection('books');
-    await collectionRefLibData.doc(docID).update(libroData);
+    await collectionRefLibData.doc(id.toString()).update(libroData);
+  }
+
+  Future<int?> getPrimerIdDisponible() async {
+    // IDs posibles del 1 al 12
+    final todos = List.generate(12, (i) => i + 1);
+
+    // Obtener libros de Firestore
+    final db = FirebaseFirestore.instance;
+    final snapshot = db
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('books')
+        .get();
+
+    // Extraer IDs existentes
+    final idsOcupados = snapshot.then(
+      (snapshot) => snapshot.docs.map((doc) => doc['id'] as int).toList(),
+    );
+
+    final Future<int?> getIdsDisponibles = idsOcupados.then((lista) {
+      if (lista.isEmpty) {
+        return null;
+      }
+      return todos
+          .where((id) {
+            bool b = true;
+            for (int i = 0; i < lista.length; i++) {
+              if (id == lista[i]) {
+                b = false;
+              }
+            }
+            return b;
+          })
+          .elementAt(0);
+    });
+
+    return getIdsDisponibles;
   }
 }
