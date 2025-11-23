@@ -1,147 +1,205 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 
 class LibroEstadisticasPage extends StatelessWidget {
-  const LibroEstadisticasPage({super.key, this.libroData});
-  final LibroData? libroData;
+  const LibroEstadisticasPage({super.key, required this.libroData});
+  final LibroData libroData;
 
   @override
   Widget build(BuildContext context) {
+    double progreso = (libroData.pagLeidas) / (libroData.pagTotales);
+
     return Scaffold(
       appBar: AppBar(
-        leading: Icon(Icons.ac_unit),
-
+        centerTitle: true,
         title: Text(
-          'Estadisticas de libro',
+          'Estadísticas del Libro',
           style: TextStyle(
             fontFamily: 'Helvetica',
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
-
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
         actions: [
           PopupMenuButton<String>(
-            icon: Icon(Icons.settings), // tuerca
+            icon: Icon(Icons.settings),
             onSelected: (value) {
               if (value == 'actualizar') {
-                print("Opción 1 seleccionada"); //TODO: que lleve a actualizar
+                context.goNamed('edit_book', extra: libroData);
               } else if (value == 'borrar') {
-                //TODO: que lleve a borrar
+                print(
+                  "Opción de borrar seleccionada",
+                ); //TODO: Implementar lógica de borrado
               }
             },
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 'actualizar',
-                child: Text(
-                  "ACTUALIZAR",
-                  style: TextStyle(
-                    color: Colors.blueAccent,
-                    fontFamily: 'Arial',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Text("Actualizar libro"),
               ),
-              PopupMenuItem(
-                value: 'borrar',
-                child: Text(
-                  'ELIMINAR',
-                  style: TextStyle(
-                    color: Colors.redAccent,
-                    fontFamily: 'Arial',
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              PopupMenuItem(value: 'borrar', child: Text("Borrar libro")),
             ],
           ),
         ],
       ),
-
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: Image.network(
-                  'https://images.icon-icons.com/317/PNG/512/book-bookmark-icon_34486.png',
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.cover,
+      extendBodyBehindAppBar: true,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFF6A1B9A), // Deep Purple
+              Color(0xFF9C27B0), // Purple
+              Color(0xFFE040FB), // Bright Purple/Fuchsia
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(
+            24,
+            MediaQuery.of(context).padding.top + kToolbarHeight,
+            24,
+            24,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    libroData.portada ??
+                        'https://images.icon-icons.com/317/PNG/512/book-bookmark-icon_34486.png',
+                    width: 200,
+                    height: 250,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
 
-            SizedBox(height: 16),
+              SizedBox(height: 24),
 
-            Text(
-              "El príncipe",
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-            ),
-
-            Text(
-              "Nicholas Maquiavelo",
-              style: TextStyle(fontSize: 18, color: Colors.grey[700]),
-            ),
-
-            SizedBox(height: 30),
-
-            Text(
-              "Progreso",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-
-            SizedBox(height: 9),
-
-            LinearProgressIndicator(
-              value: 0.8, // entre 0.0 y 1.0
-              minHeight: 10,
-              backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation(Colors.blue),
-            ),
-
-            SizedBox(height: 20),
-
-            Text(
-              "120 páginas leídas / 200 por leer",
-              style: TextStyle(fontSize: 16),
-            ),
-
-            SizedBox(height: 12),
-
-            Text(
-              "Estado: Leyendo",
-              style: TextStyle(fontSize: 16, color: Colors.blueAccent),
-            ),
-
-            SizedBox(height: 24),
-
-            Text(
-              "Comentarios",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-
-            SizedBox(height: 8),
-
-            TextField(
-              maxLines: 4, // Caja más alta
-              decoration: InputDecoration(
-                hintText: "Escribe tus comentarios aquí...",
-                border: OutlineInputBorder(),
+              Text(
+                libroData.titulo,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
-            ),
-          ],
+
+              SizedBox(height: 8),
+
+              Text(
+                libroData.autor,
+                style: TextStyle(fontSize: 18, color: Colors.white70),
+              ),
+
+              SizedBox(height: 30),
+
+              Text(
+                "Progreso",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+
+              SizedBox(height: 12),
+
+              LinearProgressIndicator(
+                value: progreso,
+                minHeight: 12,
+                backgroundColor: Colors.white.withValues(alpha: 0.3),
+                valueColor: AlwaysStoppedAnimation(Colors.white),
+                borderRadius: BorderRadius.circular(6),
+              ),
+
+              SizedBox(height: 12),
+
+              Text(
+                "${libroData.pagLeidas} páginas leídas / ${libroData.pagTotales} totales",
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+
+              SizedBox(height: 12),
+
+              Text(
+                "Estado: ${libroData.estado}",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.amberAccent,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+
+              SizedBox(height: 30),
+
+              Text(
+                "Comentarios",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+
+              SizedBox(height: 12),
+
+              // TextField(
+              //   controller: TextEditingController(text: libroData.comentarios),
+              //   maxLines: 4,
+              //   style: const TextStyle(color: Colors.white),
+              //   decoration: InputDecoration(
+              //     hintText: "Escribe tus comentarios aquí...",
+              //     hintStyle: const TextStyle(color: Colors.white70),
+              //     enabledBorder: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(12),
+              //       borderSide: const BorderSide(color: Colors.white54),
+              //     ),
+              //     focusedBorder: OutlineInputBorder(
+              //       borderRadius: BorderRadius.circular(12),
+              //       borderSide: const BorderSide(color: Colors.white),
+              //     ),
+              //     fillColor: Colors.white.withOpacity(0.1),
+              //     filled: true,
+              //   ),
+              // ),
+            ],
+          ),
         ),
       ),
-
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(16.0),
         child: SizedBox(
           width: double.infinity,
           height: 50,
-          child: ElevatedButton(onPressed: () {}, child: Text("Continuar")),
+          child: ElevatedButton(
+            onPressed: () {
+              context.goNamed('cronometro');
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text(
+              "Continuar Lectura",
+              style: TextStyle(
+                fontSize: 18,
+                color: Color(0xFF6A1B9A), // Deep Purple
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ),
       ),
     );

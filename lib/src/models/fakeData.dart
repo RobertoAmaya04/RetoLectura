@@ -8,9 +8,9 @@ final List<LibroData> librosTest = [
     titulo: 'Cien años de soledad',
     estado: 'sin empezar',
     portada:
-        'https://images.cdn1.buscalibre.com/fit-in/360x360/61/8d/618d227e8967274cd9589a549adff52d.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/a/a1/Cien_a%C3%B1os_de_soledad.png',
     pagTotales: 471,
-    pagLeidas: 0,
+    pagLeidas: 343,
     tiempoTotal: 0,
   ),
   LibroData(
