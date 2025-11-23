@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:retolectura/src/models/fakeData.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 import 'package:retolectura/src/views/global_metrics_page.dart';
-import 'package:retolectura/src/pages/home_page.dart';
+import 'package:retolectura/src/views/libro_estadisticas.dart';
 import 'package:retolectura/src/views/login_page.dart';
 import 'package:retolectura/src/views/manage_book_page.dart';
 import 'package:retolectura/src/provider/data_provider.dart';
@@ -14,10 +14,8 @@ import 'package:go_router/go_router.dart';
 import 'package:retolectura/src/views/main_page.dart';
 
 Future<void> main() async {
-  //WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
-
-  //await FirebaseAuth.instance.useAuthEmulator('10.60.7.26', 9099);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
   runApp(const RetoLectura());
 }
@@ -31,7 +29,15 @@ class RetoLectura extends StatelessWidget {
       title: 'Reto Lectura',
       debugShowCheckedModeBanner: false,
       routerConfig: GoRouter(
-        initialLocation: '/globalmetrics',
+        initialLocation: '/libstats',
+        redirect: (context, state) {
+          final user = FirebaseAuth.instance.currentUser;
+          if (user == null) {
+            return '/login';
+          }
+
+          return null;
+        },
         routes: [
           GoRoute(
             path: '/login',
@@ -64,6 +70,12 @@ class RetoLectura extends StatelessWidget {
               final book = librosTest[0];
               return ManageBookPage(book: book);
             },
+          ),
+
+          GoRoute(
+            path: '/libstats',
+            name: 'libstats',
+            builder: (context, state) => LibroEstadisticasPage(),
           ),
         ],
       ),

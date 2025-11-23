@@ -23,15 +23,35 @@ class LibroEstadisticasPage extends StatelessWidget {
           PopupMenuButton<String>(
             icon: Icon(Icons.settings), // tuerca
             onSelected: (value) {
-              if (value == 'op1') {
+              if (value == 'actualizar') {
                 print("Opción 1 seleccionada"); //TODO: que lleve a actualizar
-              } else if (value == 'op2') {
-                print("Opción 2 seleccionada"); //TODO: que lleve a borrar
+              } else if (value == 'borrar') {
+                //TODO: que lleve a borrar
               }
             },
             itemBuilder: (context) => [
-              PopupMenuItem(value: 'op1', child: Text("Opción 1")),
-              PopupMenuItem(value: 'op2', child: Text("Opción 2")),
+              PopupMenuItem(
+                value: 'actualizar',
+                child: Text(
+                  "ACTUALIZAR",
+                  style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: 'borrar',
+                child: Text(
+                  'ELIMINAR',
+                  style: TextStyle(
+                    color: Colors.redAccent,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
         ],
@@ -75,13 +95,11 @@ class LibroEstadisticasPage extends StatelessWidget {
 
             SizedBox(height: 9),
 
-            Container(
-              child: LinearProgressIndicator(
-                value: 0.8, // entre 0.0 y 1.0
-                minHeight: 10,
-                backgroundColor: Colors.grey[300],
-                valueColor: AlwaysStoppedAnimation(Colors.blue),
-              ),
+            LinearProgressIndicator(
+              value: 0.8, // entre 0.0 y 1.0
+              minHeight: 10,
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation(Colors.blue),
             ),
 
             SizedBox(height: 20),

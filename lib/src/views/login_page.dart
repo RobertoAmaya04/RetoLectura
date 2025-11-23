@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:retolectura/src/services/google-signIn.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -105,19 +108,19 @@ class LoginPage extends StatelessWidget {
                   height: 50,
                   child: OutlinedButton.icon(
                     onPressed: () {
-                      // Google login button pressed (no logic)
+                      GoogleSigin.handleGoogleSignIn();
+                      if (context.mounted) {
+                        context.pushReplacement('/home');
+                      }
                     },
-                    icon: Image.asset(
-                      'assets/google_icon.png', // You'll need to add a Google logo asset
+                    icon: Image.network(
+                      'https://cdn.icon-icons.com/icons2/836/PNG/512/Google_icon-icons.com_66793.png',
                       height: 24.0,
                       width: 24.0,
                     ),
                     label: const Text(
                       'Continuar con Google',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.white,
