@@ -143,15 +143,17 @@ class ManageBookPage extends StatelessWidget {
                         });
                         //CustomSnackBar.show(context, message: 'Libro agregado.');
                         context.pop();
+                      } else {
+                        Map<String, dynamic> data = {
+                          'autor': authorController.text,
+                          'titulo': titleController.text,
+                          'img_portada': imageController.text,
+                          'pag_totales': int.parse(totalPageController.text),
+                          'id': book!.id,
+                        };
+                        dp.updateData(data);
+                        context.pop(true);
                       }
-                      Map<String, dynamic> data = {
-                        'autor': authorController.text,
-                        'titulo': titleController.text,
-                        'img_portada': imageController.text,
-                        'pag_totales': int.parse(totalPageController.text),
-                        'id': book!.id,
-                      };
-                      dp.updateData(data);
 
                       // final libdata = LibroData.fromJson({
                       //   'pag_leidas': book!.pagLeidas,
@@ -161,7 +163,6 @@ class ManageBookPage extends StatelessWidget {
                       // });
 
                       //CustomSnackBar.show(context, message: 'Libro actualizado.');
-                      context.pop(true);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

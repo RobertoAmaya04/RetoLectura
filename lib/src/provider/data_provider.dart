@@ -90,19 +90,24 @@ class LibroDataProvider {
 
     final Future<int?> getIdsDisponibles = idsOcupados.then((lista) {
       if (lista.isEmpty) {
-        return null;
+        return 1;
       }
-      return todos
-          .where((id) {
-            bool b = true;
-            for (int i = 0; i < lista.length; i++) {
-              if (id == lista[i]) {
-                b = false;
+
+      if (lista.length == 12) {
+        return null;
+      } else {
+        return todos
+            .where((id) {
+              bool b = true;
+              for (int i = 0; i < lista.length; i++) {
+                if (id == lista[i]) {
+                  b = false;
+                }
               }
-            }
-            return b;
-          })
-          .elementAt(0);
+              return b;
+            })
+            .elementAt(0);
+      }
     });
 
     return getIdsDisponibles;

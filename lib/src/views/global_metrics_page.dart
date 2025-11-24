@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:retolectura/src/models/libro_data_model.dart';
-import 'package:retolectura/src/provider/data_provider.dart';
 
 class GlobalMetricsPage extends StatelessWidget {
   const GlobalMetricsPage({super.key, required this.books});

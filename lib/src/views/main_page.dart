@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 import 'package:retolectura/src/provider/data_provider.dart';
+import 'package:retolectura/src/services/google-signIn.dart';
 import 'package:retolectura/src/widgets/snackbar_personalizado.dart';
 
 class MainPage extends StatefulWidget {
@@ -27,20 +28,47 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            backgroundColor: Colors.white.withValues(alpha: 0.2),
-            child: ClipOval(
-              child: FirebaseAuth.instance.currentUser?.photoURL != null
-                  ? Image.network(
-                      FirebaseAuth.instance.currentUser!.photoURL!,
-                      fit: BoxFit.cover,
-                    )
-                  : const Icon(Icons.person, color: Colors.white),
+        leading: PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'SignOut') {
+              GoogleSigin.googleSignOut();
+              if (context.mounted) {
+                context.replace('/login');
+              }
+            }
+          },
+          itemBuilder: (context) => const [
+            PopupMenuItem(value: 'SignOut', child: Text("Ver perfil")),
+          ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundColor: Colors.white54, // equivale a alpha 0.2
+              child: ClipOval(
+                child: FirebaseAuth.instance.currentUser?.photoURL != null
+                    ? Image.network(
+                        FirebaseAuth.instance.currentUser!.photoURL!,
+                        fit: BoxFit.cover,
+                      )
+                    : const Icon(Icons.person, color: Colors.white),
+              ),
             ),
           ),
         ),
+        // leading: Padding(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: CircleAvatar(
+        //     backgroundColor: Colors.white.withValues(alpha: 0.2),
+        //     child: ClipOval(
+        //       child: FirebaseAuth.instance.currentUser?.photoURL != null
+        //           ? Image.network(
+        //               FirebaseAuth.instance.currentUser!.photoURL!,
+        //               fit: BoxFit.cover,
+        //             )
+        //           : const Icon(Icons.person, color: Colors.white),
+        //     ),
+        //   ),
+        // ),
         title: const Text(
           'Reto Lectura',
           style: TextStyle(
@@ -121,12 +149,8 @@ class _MainPageState extends State<MainPage> {
               itemBuilder: (BuildContext context, int index) {
                 final libro = libroData[index];
                 return GestureDetector(
-                  onTap: () async {
-                    final res = await context.pushNamed('book', extra: libro);
-
-                    if (res == null && context.mounted) {
-                      context.pushNamed('book', extra: libro);
-                    }
+                  onTap: () {
+                    context.pushNamed('book', extra: libro);
                   },
                   child: Card(
                     clipBehavior: Clip.antiAlias,

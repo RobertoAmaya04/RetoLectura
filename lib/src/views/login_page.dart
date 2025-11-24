@@ -65,26 +65,37 @@ class LoginPage extends StatelessWidget {
                     onPressed: () {
                       // Login button pressed (no logic)
                       if (emailController.text.trim().isEmpty) {
-                        CustomSnackBar.show(context,
-                            message: 'Por favor, ingresa un correo.');
+                        CustomSnackBar.show(
+                          context,
+                          message: 'Por favor, ingresa un correo.',
+                        );
                         return;
                       }
                       if (passwordController.text.trim().isEmpty) {
-                        CustomSnackBar.show(context,
-                            message: 'Por favor, ingresa una contraseña.');
+                        CustomSnackBar.show(
+                          context,
+                          message: 'Por favor, ingresa una contraseña.',
+                        );
                         return;
                       }
                       if (!Utils.isValidEmail(emailController.text.trim())) {
-                        CustomSnackBar.show(context, message: 'Por favor, ingresa un correo válido.');
+                        CustomSnackBar.show(
+                          context,
+                          message: 'Por favor, ingresa un correo válido.',
+                        );
                         return;
                       }
 
-                      if (!Utils.isPasswordSecure(passwordController.text.trim())) {
-                        CustomSnackBar.show(context, message: 'La contraseña debe tener al menos 8 caracteres.');
+                      if (!Utils.isPasswordSecure(
+                        passwordController.text.trim(),
+                      )) {
+                        CustomSnackBar.show(
+                          context,
+                          message:
+                              'La contraseña debe tener al menos 8 caracteres.',
+                        );
                         return;
                       }
-
-                      
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -96,7 +107,7 @@ class LoginPage extends StatelessWidget {
                       'Iniciar Sesión',
                       style: TextStyle(
                         fontSize: 18,
-                        color: Color(0xFF6A1B9A), 
+                        color: Color(0xFF6A1B9A),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -107,10 +118,13 @@ class LoginPage extends StatelessWidget {
                   width: double.infinity,
                   height: 50,
                   child: OutlinedButton.icon(
-                    onPressed: () {
-                      GoogleSigin.handleGoogleSignIn();
-                      if (context.mounted) {
+                    onPressed: () async {
+                      final user = await GoogleSigin.handleGoogleSignIn();
+
+                      if (user != null && context.mounted) {
                         context.pushReplacement('/home');
+                      } else {
+                        return;
                       }
                     },
                     icon: Image.network(

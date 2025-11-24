@@ -162,8 +162,11 @@ class _CronometroScreenState extends State<CronometroScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Cronómetro de lectura'),
-          backgroundColor: Colors.transparent,
+          title: const Text(
+            'Cronómetro de lectura',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Color(0xFF9C27B0),
           elevation: 0,
         ),
         body: Container(
