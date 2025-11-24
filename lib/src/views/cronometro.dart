@@ -138,12 +138,22 @@ class _CronometroScreenState extends State<CronometroScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        LibroDataProvider().updateData({
+        Map<String, dynamic> data = {
           'id': widget.libro.id,
           'tiempo_total': totalTime,
-        });
+        };
+
+        if (widget.libro.pagLeidas > 0 || widget.libro.tiempoTotal > 0) {
+          data['estado'] = 'En progreso';
+        }
+
+        if (widget.libro.pagLeidas == widget.libro.pagTotales) {
+          data['estado'] = 'Finalizado';
+        }
+
+        LibroDataProvider().updateData(data);
         final canPop = await _showExitConfirmationDialog();
-        
+
         if (canPop) {
           CustomSnackBar.show(context, message: 'Metrica guardada');
           context.pop();

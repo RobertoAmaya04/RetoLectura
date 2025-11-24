@@ -31,7 +31,7 @@ class RetoLectura extends StatelessWidget {
       title: 'Reto Lectura',
       debugShowCheckedModeBanner: false,
       routerConfig: GoRouter(
-        initialLocation: '/book',
+        initialLocation: '/home',
         routes: [
           GoRoute(
             path: '/login',
@@ -44,7 +44,6 @@ class RetoLectura extends StatelessWidget {
           //   name: 'sigin',
           //   builder: (context, state) => SiginPage(),
           // ),
-          
           GoRoute(
             path: '/home',
             name: 'home',
@@ -53,7 +52,11 @@ class RetoLectura extends StatelessWidget {
               GoRoute(
                 path: '/globalmetrics',
                 name: 'global_metrics',
-                builder: (context, state) => GlobalMetricsPage(),
+                builder: (context, state) {
+                  final bookList = state.extra as List<LibroData>;
+                  print(bookList[0]);
+                  return GlobalMetricsPage(books: bookList);
+                },
               ),
 
               GoRoute(

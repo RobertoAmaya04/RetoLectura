@@ -9,10 +9,7 @@ class LibTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.network(
-        libData.portada ??
-            'https://images.icon-icons.com/317/PNG/512/book-bookmark-icon_34486.png',
-      ),
+      leading: Image.network(libData.portada),
 
       title: Text(libData.titulo),
 

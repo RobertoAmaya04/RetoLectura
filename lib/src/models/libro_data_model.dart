@@ -3,7 +3,7 @@ class LibroData {
   final String autor;
   final String titulo;
   final String estado;
-  final String? portada;
+  final String portada;
   final int pagLeidas;
   final int pagTotales;
   final int tiempoTotal;

@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:retolectura/src/models/fakeData.dart';
+
 import 'package:retolectura/src/models/libro_data_model.dart';
 
 class LibroDataProvider {
   Future<List<LibroData>> getAllLibroData() async {
     final db = FirebaseFirestore.instance;
-    final collectionRefTodos = db.collection('users');
+    final collectionRefLibData = db
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('books');
 
-    final snapshotTodos = await collectionRefTodos.get();
+    final snapshotTodos = await collectionRefLibData.get();
 
     final libroData = List<LibroData>.from(
       snapshotTodos.docs.map((libroData) {
@@ -103,5 +106,17 @@ class LibroDataProvider {
     });
 
     return getIdsDisponibles;
+  }
+
+  Future<void> deleteData(Map<String, dynamic> libroData) async {
+    final db = FirebaseFirestore.instance;
+
+    final id = libroData['id'];
+
+    final collectionRefLibData = db
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('books');
+    await collectionRefLibData.doc(id.toString()).delete();
   }
 }

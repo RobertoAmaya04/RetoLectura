@@ -51,8 +51,13 @@ class _MainPageState extends State<MainPage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              context.goNamed('global_metrics');
+            onPressed: () async {
+              if (context.mounted) {
+                context.goNamed(
+                  'global_metrics',
+                  extra: await data.getAllLibroData(),
+                );
+              }
             },
             icon: const Icon(Icons.bar_chart, color: Colors.white),
           ),
@@ -116,8 +121,12 @@ class _MainPageState extends State<MainPage> {
               itemBuilder: (BuildContext context, int index) {
                 final libro = libroData[index];
                 return GestureDetector(
-                  onTap: () {
-                    context.goNamed('book', extra: libro);
+                  onTap: () async {
+                    final res = await context.pushNamed('book', extra: libro);
+
+                    if (res == null && context.mounted) {
+                      context.pushNamed('book', extra: libro);
+                    }
                   },
                   child: Card(
                     clipBehavior: Clip.antiAlias,
@@ -145,11 +154,13 @@ class _MainPageState extends State<MainPage> {
           if (contIds != null && context.mounted) {
             context.goNamed('create_book');
           } else {
-            CustomSnackBar.show(
-              context, 
-              message: 'Limite de libros alcanzado.',
-              icon: Icons.warning,
-            );
+            if (context.mounted) {
+              CustomSnackBar.show(
+                context,
+                message: 'Limite de libros alcanzado.',
+                icon: Icons.warning,
+              );
+            }
           }
         },
         backgroundColor: Colors.white,

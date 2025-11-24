@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:retolectura/src/models/fakeData.dart';
+
+import 'package:retolectura/src/models/libro_data_model.dart';
+import 'package:retolectura/src/provider/data_provider.dart';
 
 class GlobalMetricsPage extends StatelessWidget {
-  GlobalMetricsPage({super.key});
-
-  final books = librosTest;
+  const GlobalMetricsPage({super.key, required this.books});
+  final List<LibroData> books;
+  // ignore: prefer_function_declarations_over_variables
 
   String _formatDuration(int totalSeconds) {
     final duration = Duration(seconds: totalSeconds);
@@ -99,7 +101,7 @@ class GlobalMetricsPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               SizedBox(
-                height: 180, 
+                height: 180,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: books.length,
@@ -108,44 +110,55 @@ class GlobalMetricsPage extends StatelessWidget {
                     return Card(
                       color: Colors.white.withValues(alpha: 0.2),
                       margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                      clipBehavior: Clip.antiAlias, 
+                      clipBehavior: Clip.antiAlias,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: SizedBox(
                         width: 120,
-                        height: 180, 
+                        height: 180,
                         child: book.portada != null
                             ? Image.network(
                                 book.portada!,
-                                fit: BoxFit.cover, 
+                                fit: BoxFit.cover,
                                 width: double.infinity,
                                 height: double.infinity,
-                                errorBuilder: (context, error, stackTrace) => Container(
-                                  color: Colors.white.withValues(alpha: 0.1),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.book,
-                                      size: 80,
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ),
-                                loadingBuilder: (context, child, loadingProgress) {
-                                  if (loadingProgress == null) return child;
-                                  return Container(
-                                    color: Colors.white.withValues(alpha: 0.1),
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress.expectedTotalBytes != null
-                                            ? loadingProgress.cumulativeBytesLoaded /
-                                                loadingProgress.expectedTotalBytes!
-                                            : null,
-                                        color: Colors.white70,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Container(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.book,
+                                          size: 80,
+                                          color: Colors.white70,
+                                        ),
                                       ),
                                     ),
-                                  );
-                                },
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Container(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                        child: Center(
+                                          child: CircularProgressIndicator(
+                                            value:
+                                                loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                : null,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                      );
+                                    },
                               )
                             : Container(
                                 color: Colors.white.withValues(alpha: 0.1),

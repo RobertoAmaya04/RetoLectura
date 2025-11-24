@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 import 'package:retolectura/src/provider/data_provider.dart';
 import 'package:retolectura/src/widgets/snackbar_personalizado.dart';
@@ -20,7 +21,7 @@ class ManageBookPage extends StatelessWidget {
     if (book != null) {
       titleController.text = book!.titulo;
       authorController.text = book!.autor;
-      imageController.text = book!.portada ?? "";
+      imageController.text = book!.portada;
       totalPageController.text = book!.pagTotales.toString();
     }
 
@@ -91,31 +92,42 @@ class ManageBookPage extends StatelessWidget {
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-
                       if (titleController.text.trim().isEmpty) {
-                        CustomSnackBar.show(context,
-                            message: 'Por favor, ingresa un título.');
+                        CustomSnackBar.show(
+                          context,
+                          message: 'Por favor, ingresa un título.',
+                        );
                         return;
                       }
                       if (authorController.text.trim().isEmpty) {
-                        CustomSnackBar.show(context,
-                            message: 'Por favor, ingresa un autor.');
+                        CustomSnackBar.show(
+                          context,
+                          message: 'Por favor, ingresa un autor.',
+                        );
                         return;
                       }
-                       if (imageController.text.trim().isEmpty) {
-                        CustomSnackBar.show(context,
-                            message: 'Por favor, ingresa la URL de la portada.');
+                      if (imageController.text.trim().isEmpty) {
+                        CustomSnackBar.show(
+                          context,
+                          message: 'Por favor, ingresa la URL de la portada.',
+                        );
                         return;
                       }
                       if (totalPageController.text.trim().isEmpty) {
-                        CustomSnackBar.show(context,
-                            message: 'Por favor, ingresa el número de páginas.');
+                        CustomSnackBar.show(
+                          context,
+                          message: 'Por favor, ingresa el número de páginas.',
+                        );
                         return;
                       }
-                      final totalPagesInt = int.tryParse(totalPageController.text.trim());
+                      final totalPagesInt = int.tryParse(
+                        totalPageController.text.trim(),
+                      );
                       if (totalPagesInt == null || totalPagesInt <= 0) {
-                        CustomSnackBar.show(context,
-                            message: 'Ingresa un número de páginas válido.');
+                        CustomSnackBar.show(
+                          context,
+                          message: 'Ingresa un número de páginas válido.',
+                        );
                         return;
                       }
 
@@ -129,18 +141,27 @@ class ManageBookPage extends StatelessWidget {
                           'pag_leidas': 0,
                           'tiempo_total': 0,
                         });
-                        CustomSnackBar.show(context, message: 'Libro agregado.');
-                        return;
+                        //CustomSnackBar.show(context, message: 'Libro agregado.');
+                        context.pop();
                       }
-
-                      dp.updateData({
+                      Map<String, dynamic> data = {
                         'autor': authorController.text,
                         'titulo': titleController.text,
                         'img_portada': imageController.text,
                         'pag_totales': int.parse(totalPageController.text),
                         'id': book!.id,
-                      });
-                      CustomSnackBar.show(context, message: 'Libro actualizado.');
+                      };
+                      dp.updateData(data);
+
+                      // final libdata = LibroData.fromJson({
+                      //   'pag_leidas': book!.pagLeidas,
+                      //   'estado': book!.estado,
+                      //   'tiempo_total': book!.tiempoTotal,
+                      //   ...data,
+                      // });
+
+                      //CustomSnackBar.show(context, message: 'Libro actualizado.');
+                      context.pop(true);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
