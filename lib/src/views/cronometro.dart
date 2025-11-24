@@ -156,7 +156,7 @@ class _CronometroScreenState extends State<CronometroScreen> {
 
         if (canPop) {
           CustomSnackBar.show(context, message: 'Metrica guardada');
-          context.pop();
+          context.pushNamed('/home/book', extra: widget.libro);
         }
         return false;
       },

@@ -38,7 +38,7 @@ class _MainPageState extends State<MainPage> {
             }
           },
           itemBuilder: (context) => const [
-            PopupMenuItem(value: 'SignOut', child: Text("Ver perfil")),
+            PopupMenuItem(value: 'SignOut', child: Text("Cerrar Sesión")),
           ],
           child: Padding(
             padding: const EdgeInsets.all(8.0),

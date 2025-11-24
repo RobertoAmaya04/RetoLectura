@@ -1,16 +1,7 @@
-# retolectura
+# Proyecto 2: Reto de Lectura – 12 Libros al Año
 
-A new Flutter project.
+## Integrantes
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Roberto Carlos Amaya Mejía** – 20232030549
+- **Amehd Fernando Mendez Chinchilla** – 20232030664
+- **Leonardo Daniel Amaya Cárcamo** – 20202000026

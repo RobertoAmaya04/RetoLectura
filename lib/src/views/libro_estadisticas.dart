@@ -187,8 +187,11 @@ class _LibroEstadisticasPageState extends State<LibroEstadisticasPage> {
             width: double.infinity,
             height: 50,
             child: ElevatedButton(
-              onPressed: () {
-                context.goNamed('cronometro', extra: widget.libroData);
+              onPressed: () async {
+                final newLibro = context.goNamed(
+                  'cronometro',
+                  extra: widget.libroData,
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
