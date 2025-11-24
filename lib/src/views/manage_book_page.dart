@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 import 'package:retolectura/src/provider/data_provider.dart';
+import 'package:retolectura/src/widgets/snackbar_personalizado.dart';
+import 'package:retolectura/src/widgets/style_default.dart';
 
 class ManageBookPage extends StatelessWidget {
   final LibroDataProvider dp = LibroDataProvider();
@@ -53,99 +56,69 @@ class ManageBookPage extends StatelessWidget {
             padding: const EdgeInsets.all(24.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const SizedBox(height: kToolbarHeight + 40),
-                TextField(
+              children: [
+                SizedBox(height: 30),
+                CustomTextField(
+                  labelText: 'Titulo',
+                  icon: Icons.book,
                   controller: titleController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'Título',
-                    labelStyle: const TextStyle(color: Colors.white70),
-                    prefixIcon: const Icon(Icons.book, color: Colors.white70),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white54),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white),
-                    ),
-                    fillColor: Colors.white.withValues(alpha: 0.1),
-                    filled: true,
-                  ),
+                  keyboardType: TextInputType.text,
                 ),
-                const SizedBox(height: 20),
-                TextField(
+                SizedBox(height: 20),
+                CustomTextField(
+                  labelText: 'Autor',
+                  icon: Icons.person,
                   controller: authorController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'Autor',
-                    labelStyle: const TextStyle(color: Colors.white70),
-                    prefixIcon: const Icon(Icons.person, color: Colors.white70),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white54),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white),
-                    ),
-                    fillColor: Colors.white.withValues(alpha: 0.1),
-                    filled: true,
-                  ),
+                  keyboardType: TextInputType.text,
                 ),
-                const SizedBox(height: 20),
-                TextField(
+                SizedBox(height: 20),
+                CustomTextField(
+                  labelText: 'URL de la Portada',
+                  icon: Icons.image,
                   controller: imageController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'URL de la Portada',
-                    labelStyle: const TextStyle(color: Colors.white70),
-                    prefixIcon: const Icon(Icons.image, color: Colors.white70),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white54),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white),
-                    ),
-                    fillColor: Colors.white.withValues(alpha: 0.1),
-                    filled: true,
-                  ),
+                  keyboardType: TextInputType.url,
                 ),
-                const SizedBox(height: 20),
-                TextField(
+                SizedBox(height: 20),
+                CustomTextField(
+                  labelText: 'Numeros de Paginas',
+                  icon: Icons.format_list_numbered,
                   controller: totalPageController,
                   keyboardType: TextInputType.number,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'Número de Páginas',
-                    labelStyle: const TextStyle(color: Colors.white70),
-                    prefixIcon: const Icon(
-                      Icons.format_list_numbered,
-                      color: Colors.white70,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white54),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white),
-                    ),
-                    fillColor: Colors.white.withValues(alpha: 0.1),
-                    filled: true,
-                  ),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30),
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
                     onPressed: () {
-                      // TODO: Implement save functionality
-                      // TODO: Implement controller validation
+
+                      if (titleController.text.trim().isEmpty) {
+                        CustomSnackBar.show(context,
+                            message: 'Por favor, ingresa un título.');
+                        return;
+                      }
+                      if (authorController.text.trim().isEmpty) {
+                        CustomSnackBar.show(context,
+                            message: 'Por favor, ingresa un autor.');
+                        return;
+                      }
+                       if (imageController.text.trim().isEmpty) {
+                        CustomSnackBar.show(context,
+                            message: 'Por favor, ingresa la URL de la portada.');
+                        return;
+                      }
+                      if (totalPageController.text.trim().isEmpty) {
+                        CustomSnackBar.show(context,
+                            message: 'Por favor, ingresa el número de páginas.');
+                        return;
+                      }
+                      final totalPagesInt = int.tryParse(totalPageController.text.trim());
+                      if (totalPagesInt == null || totalPagesInt <= 0) {
+                        CustomSnackBar.show(context,
+                            message: 'Ingresa un número de páginas válido.');
+                        return;
+                      }
+
                       if (book == null) {
                         dp.saveData({
                           'autor': authorController.text,
@@ -156,6 +129,7 @@ class ManageBookPage extends StatelessWidget {
                           'pag_leidas': 0,
                           'tiempo_total': 0,
                         });
+                        CustomSnackBar.show(context, message: 'Libro agregado.');
                         return;
                       }
 
@@ -166,6 +140,7 @@ class ManageBookPage extends StatelessWidget {
                         'pag_totales': int.parse(totalPageController.text),
                         'id': book!.id,
                       });
+                      CustomSnackBar.show(context, message: 'Libro actualizado.');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

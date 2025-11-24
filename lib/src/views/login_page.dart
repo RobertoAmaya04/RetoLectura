@@ -2,9 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:retolectura/src/services/google-signIn.dart';
+import 'package:retolectura/src/widgets/Utils.dart';
+import 'package:retolectura/src/widgets/snackbar_personalizado.dart';
+import 'package:retolectura/src/widgets/style_default.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  LoginPage({super.key});
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +32,7 @@ class LoginPage extends StatelessWidget {
             padding: const EdgeInsets.all(24.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                // Optional: Add a logo or app name
+              children: [
                 const Text(
                   'Bienvenido',
                   style: TextStyle(
@@ -38,45 +43,19 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 50),
-                TextField(
+                CustomTextField(
+                  labelText: 'Correo electrónico',
+                  icon: Icons.mail,
                   keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'Correo electrónico',
-                    labelStyle: const TextStyle(color: Colors.white70),
-                    prefixIcon: const Icon(Icons.email, color: Colors.white70),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white54),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white),
-                    ),
-                    fillColor: Colors.white.withValues(alpha: 0.1),
-                    filled: true,
-                  ),
+                  controller: emailController,
                 ),
                 const SizedBox(height: 20),
-
-                TextField(
-                  obscureText: true,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'Contraseña',
-                    labelStyle: const TextStyle(color: Colors.white70),
-                    prefixIcon: const Icon(Icons.lock, color: Colors.white70),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white54),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.white),
-                    ),
-                    fillColor: Colors.white.withValues(alpha: 0.1),
-                    filled: true,
-                  ),
+                CustomTextField(
+                  labelText: 'Contraseña',
+                  icon: Icons.lock,
+                  keyboardType: TextInputType.text,
+                  controller: passwordController,
+                  obscure: true,
                 ),
                 const SizedBox(height: 30),
                 SizedBox(
@@ -85,6 +64,27 @@ class LoginPage extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       // Login button pressed (no logic)
+                      if (emailController.text.trim().isEmpty) {
+                        CustomSnackBar.show(context,
+                            message: 'Por favor, ingresa un correo.');
+                        return;
+                      }
+                      if (passwordController.text.trim().isEmpty) {
+                        CustomSnackBar.show(context,
+                            message: 'Por favor, ingresa una contraseña.');
+                        return;
+                      }
+                      if (!Utils.isValidEmail(emailController.text.trim())) {
+                        CustomSnackBar.show(context, message: 'Por favor, ingresa un correo válido.');
+                        return;
+                      }
+
+                      if (!Utils.isPasswordSecure(passwordController.text.trim())) {
+                        CustomSnackBar.show(context, message: 'La contraseña debe tener al menos 8 caracteres.');
+                        return;
+                      }
+
+                      
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -96,7 +96,7 @@ class LoginPage extends StatelessWidget {
                       'Iniciar Sesión',
                       style: TextStyle(
                         fontSize: 18,
-                        color: Color(0xFF6A1B9A), // Deep Purple
+                        color: Color(0xFF6A1B9A), 
                         fontWeight: FontWeight.bold,
                       ),
                     ),

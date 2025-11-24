@@ -31,7 +31,7 @@ class RetoLectura extends StatelessWidget {
       title: 'Reto Lectura',
       debugShowCheckedModeBanner: false,
       routerConfig: GoRouter(
-        initialLocation: '/home',
+        initialLocation: '/book',
         routes: [
           GoRoute(
             path: '/login',
@@ -44,6 +44,7 @@ class RetoLectura extends StatelessWidget {
           //   name: 'sigin',
           //   builder: (context, state) => SiginPage(),
           // ),
+          
           GoRoute(
             path: '/home',
             name: 'home',

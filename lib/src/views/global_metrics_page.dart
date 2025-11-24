@@ -99,7 +99,7 @@ class GlobalMetricsPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               SizedBox(
-                height: 180, // Adjust height as needed
+                height: 180, 
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: books.length,
@@ -108,17 +108,17 @@ class GlobalMetricsPage extends StatelessWidget {
                     return Card(
                       color: Colors.white.withValues(alpha: 0.2),
                       margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                      clipBehavior: Clip.antiAlias, // Importante para que el border radius funcione
+                      clipBehavior: Clip.antiAlias, 
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: SizedBox(
                         width: 120,
-                        height: 180, // Define una altura fija para el card
+                        height: 180, 
                         child: book.portada != null
                             ? Image.network(
                                 book.portada!,
-                                fit: BoxFit.cover, // Cubre todo el espacio
+                                fit: BoxFit.cover, 
                                 width: double.infinity,
                                 height: double.infinity,
                                 errorBuilder: (context, error, stackTrace) => Container(

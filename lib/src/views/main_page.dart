@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 import 'package:retolectura/src/provider/data_provider.dart';
+import 'package:retolectura/src/widgets/snackbar_personalizado.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -144,7 +145,11 @@ class _MainPageState extends State<MainPage> {
           if (contIds != null && context.mounted) {
             context.goNamed('create_book');
           } else {
-            //TODO: show snackbar
+            CustomSnackBar.show(
+              context, 
+              message: 'Limite de libros alcanzado.',
+              icon: Icons.warning,
+            );
           }
         },
         backgroundColor: Colors.white,

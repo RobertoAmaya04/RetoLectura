@@ -1,7 +1,9 @@
+
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  final String hintText;
+  final String labelText;
+  final IconData? icon;
   final TextEditingController? controller;
   final TextInputType keyboardType;
   final bool obscure;
@@ -9,7 +11,8 @@ class CustomTextField extends StatelessWidget {
 
   const CustomTextField({
     super.key,
-    required this.hintText,
+    required this.labelText,
+    this.icon,
     this.controller,
     this.keyboardType = TextInputType.text,
     this.obscure = false,
@@ -23,24 +26,23 @@ class CustomTextField extends StatelessWidget {
       keyboardType: keyboardType,
       obscureText: obscure,
       onChanged: onChanged,
-      style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Texto en negro
+      style: const TextStyle(color: Colors.white), 
       decoration: InputDecoration(
-        hintText: hintText,
-        hintStyle: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Hint más tenue
+        labelText: labelText,
+        labelStyle: const TextStyle(color: Colors.white70),
+        prefixIcon: icon != null ? Icon(icon, color: Colors.white70) : null,
         filled: true,
-        fillColor: const Color(0xFF9C27B0), // Fondo morado
+        fillColor: Colors.white.withValues(alpha: 0.1),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(
-            color: Color(0xFF6A1B9A), // Borde morado oscuro
-          ),
+          borderSide: const BorderSide(color: Colors.white54),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(
-            color: Color(0xFFE040FB), // Borde morado claro al enfocar
+            color: Colors.white, 
             width: 2,
           ),
         ),

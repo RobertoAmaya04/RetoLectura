@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:retolectura/src/models/libro_data_model.dart';
 import 'package:retolectura/src/provider/data_provider.dart';
+import 'package:retolectura/src/widgets/snackbar_personalizado.dart';
 
 class CronometroScreen extends StatefulWidget {
   final LibroData libro;
@@ -46,7 +47,6 @@ class _CronometroScreenState extends State<CronometroScreen> {
   }
 
   void _resumeTimer() {
-    // Re-instanciamos el timer para continuar.
     if (_isRunning && _isPaused) {
       _isPaused = false;
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -94,7 +94,7 @@ class _CronometroScreenState extends State<CronometroScreen> {
                 labelText: '¿En qué página quedaste?',
               ),
             ),
-            actions: <Widget>[
+            actions: [
               TextButton(
                 onPressed: () {
                   _resumeTimer();
@@ -119,8 +119,6 @@ class _CronometroScreenState extends State<CronometroScreen> {
                   }
 
                   totalTime += _seconds;
-                  // Aquí deberías tener una función para actualizar el libro en tu DataProvider
-                  // provider.updateBook(updatedLibro);
 
                   setState(() {
                     _hasSaved = true;
@@ -145,7 +143,9 @@ class _CronometroScreenState extends State<CronometroScreen> {
           'tiempo_total': totalTime,
         });
         final canPop = await _showExitConfirmationDialog();
+        
         if (canPop) {
+          CustomSnackBar.show(context, message: 'Metrica guardada');
           context.pop();
         }
         return false;
@@ -211,21 +211,28 @@ class _CronometroScreenState extends State<CronometroScreen> {
     }
 
     return [
-      ElevatedButton( 
+      ElevatedButton(
         onPressed: _isPaused ? _resumeTimer : _pauseTimer,
         child: Text(_isPaused ? 'Continuar' : 'Pausar'),
         style: _buttonStyle(color: _isPaused ? Colors.green : null),
       ),
       const SizedBox(width: 10),
       ElevatedButton(
-        onPressed: _showExitConfirmationDialog,
+        onPressed: () async {
+          final rst = await _showExitConfirmationDialog();
+          if (!context.mounted) return;
+          if (rst) {
+            CustomSnackBar.show(context, message: 'Metrica guardada');
+          }
+        },
+
         child: const Text('Finalizar'),
         style: _buttonStyle(),
       ),
     ];
   }
 
-  ButtonStyle _buttonStyle({Color? color}) { 
+  ButtonStyle _buttonStyle({Color? color}) {
     return ElevatedButton.styleFrom(
       foregroundColor: color ?? const Color(0xFF6A1B9A),
       backgroundColor: Colors.white,

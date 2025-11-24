@@ -60,12 +60,7 @@ class LibroEstadisticasPage extends StatelessWidget {
           ),
         ),
         child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(
-            24,
-            MediaQuery.of(context).padding.top + kToolbarHeight,
-            24,
-            24,
-          ),
+          padding: EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
